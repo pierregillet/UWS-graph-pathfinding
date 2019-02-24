@@ -7,7 +7,7 @@
 typedef boost::property<boost::vertex_name_t, std::string> vertex_p;
 
 // Edge properties
-typedef boost::property<boost::edge_weight_t, double > edge_p;
+typedef boost::property<boost::edge_weight_t, double> edge_p;
 
 // Graph properties
 typedef boost::property<boost::graph_name_t, std::string> graph_p;
@@ -24,7 +24,7 @@ public:
     static void printGraph(graph_t graph);
 
 private:
-    UndirectedGraphHelper();
+    UndirectedGraphHelper() = default;
 };
 
 

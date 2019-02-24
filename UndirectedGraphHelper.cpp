@@ -23,11 +23,16 @@ graph_t UndirectedGraphHelper::parseGraphFromFile(const std::string & graphFilen
 }
 
 void UndirectedGraphHelper::printGraph(graph_t graph) {
+    boost::property_map<graph_t, boost::vertex_name_t>::type vertexMap(get(boost::vertex_name, graph));
+    boost::property_map<graph_t, boost::edge_weight_t>::type edgeWeightMap(get(boost::edge_weight, graph));
+
     boost::graph_traits<graph_t>::edge_iterator it, end;
-    for(tie(it, end) = edges(graph); it != end; ++it) {
-        std::cout << get(boost::vertex_name, graph)[source(*it, graph)]
+    for(tie(it, end) = boost::edges(graph); it != end; ++it) {
+        std::cout << vertexMap[source(*it, graph)]
                   << " -> "
-                  << get(boost::vertex_name, graph)[target(*it, graph)]
+                  << vertexMap[target(*it, graph)]
+                  << " weight : "
+                  << edgeWeightMap[*it]
                   << std::endl;
     }
 }
