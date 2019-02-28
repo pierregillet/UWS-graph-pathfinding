@@ -3,25 +3,22 @@
 
 #include <boost/graph/graphviz.hpp>
 
-// Vertex properties
-typedef boost::property<boost::vertex_name_t, std::string> vertex_p;
 
-// Edge properties
-typedef boost::property<boost::edge_weight_t, double> edge_p;
+namespace {
+    using namespace boost;
 
-// Graph properties
-typedef boost::property<boost::graph_name_t, std::string> graph_p;
-
-// adjacency_list-based type
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
-        vertex_p, edge_p, graph_p> graph_t;
-
+    typedef property<vertex_name_t, std::string> vertex_properties;
+    typedef property<edge_weight_t, double> edge_properties;
+    typedef property<graph_name_t, std::string> graph_properties;
+    typedef adjacency_list<vecS, vecS, undirectedS, vertex_properties,
+            edge_properties, graph_properties> undirected_graph;
+}
 
 class UndirectedGraphHelper {
 public:
-    static graph_t parseGraphFromFile(const std::string & graphFilename);
+    static undirected_graph parseGraphFromFile(const std::string & graph_filename);
 
-    static void printGraph(graph_t graph);
+    static void printGraph(undirected_graph & graph);
 
 private:
     UndirectedGraphHelper() = default;

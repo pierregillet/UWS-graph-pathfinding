@@ -5,7 +5,8 @@ project(pathfinding_assignment)
 
 add_executable(pathfinding_assignment
         main.cpp
-        UndirectedGraphHelper.cpp UndirectedGraphHelper.h)
+        UndirectedGraphHelper.cpp UndirectedGraphHelper.h
+        IDAStar.cpp IDAStar.h)
 
 find_package(Boost REQUIRED COMPONENTS graph)
 
