@@ -14,17 +14,18 @@ private:
     vertex_iterator goal;
     std::vector<vertex_iterator> path;
 
-    int search(std::vector<vertex_iterator> path, const int & currentNodeCost,
-               const int & bound) const;
+    double search(std::vector<vertex_iterator> path, const double & currentNodeCost,
+               const double & bound) const;
 
     std::vector<vertex_iterator> findSuccessors(vertex_iterator node) const;
 
-    int estimateCost(vertex_iterator node) const;
-    bool isGoal(vertex_iterator vertexRoot) const;
+    double estimateCost(vertex_descriptor node) const;
+//    int calculateStepCost(vertex_iterator node, vertex_iterator successor) const;
+    bool isGoal(vertex_descriptor vertexRoot) const;
 
 public:
-    IDAStar(undirected_graph & graph, const vertex_iterator & root,
-            const vertex_iterator & goal);
+    IDAStar(undirected_graph & graph, vertex_iterator root,
+            vertex_iterator goal);
 };
 
 

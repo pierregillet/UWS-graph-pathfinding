@@ -11,12 +11,10 @@ UndirectedGraphHelper::parseGraphFromFile(const std::string & graph_filename) {
     undirected_graph graph(0);
     boost::dynamic_properties dp(boost::ignore_other_properties);
 
-    boost::property_map<undirected_graph, boost::vertex_name_t>::type name =
-            get(boost::vertex_name, graph);
+    auto name(get(boost::vertex_name, graph));
     dp.property("node_id", name);
 
-    boost::property_map<undirected_graph, boost::edge_weight_t>::type weight =
-            get(boost::edge_weight, graph);
+    auto weight(get(boost::edge_weight, graph));
     dp.property("label",weight);
 
     boost::read_graphviz(graphFile, graph, dp, "node_id");
@@ -27,13 +25,11 @@ UndirectedGraphHelper::parseGraphFromFile(const std::string & graph_filename) {
 vertex_iterator
 UndirectedGraphHelper::findNode(undirected_graph & graph, const int & nodeLabel) {
     using namespace boost;
-    property_map<undirected_graph, vertex_name_t>::type vertexMap(get(vertex_name, graph));
+    auto vertexNameMap(get(vertex_name, graph));
     vertex_iterator it, end;
 
-    tie(it, end) = vertices(graph);
-
     for(tie(it, end) = vertices(graph); it != end; ++it) {
-        if (std::to_string(nodeLabel) == vertexMap[*it]) {
+        if (std::to_string(nodeLabel) == vertexNameMap[*it]) {
             return it;
         }
     }
@@ -42,11 +38,13 @@ UndirectedGraphHelper::findNode(undirected_graph & graph, const int & nodeLabel)
 }
 
 void UndirectedGraphHelper::printGraph(undirected_graph & graph) {
-    boost::property_map<undirected_graph, boost::vertex_name_t>::type vertexMap(get(boost::vertex_name, graph));
-    boost::property_map<undirected_graph, boost::edge_weight_t>::type edgeWeightMap(get(boost::edge_weight, graph));
+    using namespace boost;
 
-    boost::graph_traits<undirected_graph>::edge_iterator it, end;
-    for(tie(it, end) = boost::edges(graph); it != end; ++it) {
+    auto vertexMap(get(vertex_name, graph));
+    auto edgeWeightMap(get(edge_weight, graph));
+
+    graph_traits<undirected_graph>::edge_iterator it, end;
+    for(tie(it, end) = edges(graph); it != end; ++it) {
         std::cout << vertexMap[source(*it, graph)]
                   << " -> "
                   << vertexMap[target(*it, graph)]

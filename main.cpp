@@ -21,11 +21,10 @@ T getInputFromUser() {
     return input;
 }
 
-
 int main(int argc, char * argv[]) {
     using namespace boost;
     std::string graphFilename("random64_4_1485816605.dot");
-    undirected_graph graph(UndirectedGraphHelper::parseGraphFromFile(graphFilename));
+    auto graph(UndirectedGraphHelper::parseGraphFromFile(graphFilename));
 
 //    UndirectedGraphHelper::printGraph(graph);
 
@@ -37,7 +36,7 @@ int main(int argc, char * argv[]) {
     auto root = UndirectedGraphHelper::findNode(graph, rootNodeNumber);
     auto goal = UndirectedGraphHelper::findNode(graph, goalNodeNumber);
 
-    IDAStar pathFinder = IDAStar(graph, root, goal);
+    auto pathFinder = IDAStar(graph, root, goal);
 
     return 0;
 }
