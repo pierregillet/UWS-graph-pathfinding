@@ -21,15 +21,14 @@ private:
     undirected_graph graph;
     vertex_descriptor root;
     vertex_descriptor goal;
-    double currentNodeCost;
     std::vector<vertex_descriptor> path;
 
     bool pathIsFound;
     double bound;
 
-    SearchResult search(double currentNodeCost) const;
+    SearchResult search(const double currentNodeCost);
 
-    std::vector<vertex_descriptor> findSuccessors(vertex_descriptor node) const;
+    std::vector<vertex_descriptor> findSuccessors(vertex_descriptor sourceNode);
 
     double estimateCost(vertex_descriptor node) const;
 //    int calculateStepCost(vertex_iterator node, vertex_iterator successor) const;

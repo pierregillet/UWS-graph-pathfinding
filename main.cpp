@@ -29,15 +29,13 @@ int main(int argc, char * argv[]) {
 //    UndirectedGraphHelper::printGraph(graph);
 
     std::cout << "Root node number:" << std::endl << "> ";
-    auto rootNodeNumber{getInputFromUser<int>()};
-    std::cout << "Goal node number:" << std::endl << "> ";
-    auto goalNodeNumber{getInputFromUser<int>()};
-
+    auto rootNodeNumber {getInputFromUser<int>()};
     auto root {UndirectedGraphHelper::findNode(graph, rootNodeNumber)};
+    std::cout << "Goal node number:" << std::endl << "> ";
+    auto goalNodeNumber {getInputFromUser<int>()};
     auto goal {UndirectedGraphHelper::findNode(graph, goalNodeNumber)};
 
     IDAStar pathFinder {graph, root, goal};
-
     UndirectedGraphHelper::printPath(graph, pathFinder.getPath());
 
     return 0;

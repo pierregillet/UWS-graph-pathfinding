@@ -22,9 +22,9 @@ IDAStar::IDAStar(undirected_graph & graph,
 }
 
 SearchResult
-IDAStar::search(double currentNodeCost) const {
-    auto currentNode = path.back();
-    auto estimatedTotalCost {currentNodeCost + estimateCost(currentNode)};
+IDAStar::search(const double currentNodeCost) {
+    auto currentNode = this->path.back();
+    auto estimatedTotalCost {currentNodeCost + this->estimateCost(currentNode)};
 
     if (estimatedTotalCost > this->bound) {
         return {false, std::make_shared<double>(estimatedTotalCost)};
@@ -33,12 +33,42 @@ IDAStar::search(double currentNodeCost) const {
         return {true};
     }
 
-//    return SearchResult{true, std::make_shared<double>(12.34d)};
+    SearchResult searchResult {};
+
+    for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
+        if (std::find(path.begin(), path.end(), successor) != path.end()) {
+            this->path.push_back(successor);
+
+        }
+    }
+
+    return searchResult;
 }
 
 std::vector<vertex_descriptor>
-IDAStar::findSuccessors(vertex_descriptor node) const {
+IDAStar::findSuccessors(vertex_descriptor sourceNode) {
+    using namespace boost;
+    auto edgeWeightMap {get(edge_weight, this->graph)};
 
+    std::vector<vertex_descriptor> orderedNodes;
+
+    graph_traits<undirected_graph>::adjacency_iterator it, end;
+
+    for(tie(it, end) = adjacent_vertices(sourceNode, this->graph); it != end; ++it) {
+        orderedNodes.push_back(*it);
+    }
+    std::sort(orderedNodes.begin(), orderedNodes.end(),
+              [sourceNode, edgeWeightMap, this](vertex_descriptor i, vertex_descriptor j) {
+                  auto iEdge {edge(sourceNode, i, this->graph)};
+                  auto jEdge {edge(sourceNode, j, this->graph)};
+                  if (!iEdge.second || !jEdge.second) {
+                          throw std::runtime_error("Edge not found.");
+                  }
+                  return edgeWeightMap[iEdge.first] < edgeWeightMap[jEdge.first];
+              }
+    );
+
+    return orderedNodes;
 }
 
 double
