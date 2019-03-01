@@ -21,7 +21,7 @@ class UndirectedGraphHelper {
 public:
     static undirected_graph parseGraphFromFile(const std::string & graph_filename);
 
-    static vertex_iterator findNode(undirected_graph & graph, const int & nodeLabel);
+    static vertex_descriptor findNode(undirected_graph & graph, const int & nodeLabel);
 
     static property_map<undirected_graph, edge_weight_t>::type
     getEdgeWeightPropertyMap(undirected_graph & graph);

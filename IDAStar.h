@@ -10,22 +10,23 @@
 class IDAStar {
 private:
     undirected_graph graph;
-    vertex_iterator root;
-    vertex_iterator goal;
-    std::vector<vertex_iterator> path;
+    vertex_descriptor root;
+    vertex_descriptor goal;
+    double currentNodeCost
+    std::vector<vertex_descriptor> path;
 
-    double search(std::vector<vertex_iterator> path, const double & currentNodeCost,
-               const double & bound) const;
+    double search(std::vector<vertex_descriptor> path, double & currentNodeCost,
+                  double & bound) const;
 
-    std::vector<vertex_iterator> findSuccessors(vertex_iterator node) const;
+    std::vector<vertex_descriptor> findSuccessors(vertex_descriptor node) const;
 
     double estimateCost(vertex_descriptor node) const;
 //    int calculateStepCost(vertex_iterator node, vertex_iterator successor) const;
     bool isGoal(vertex_descriptor vertexRoot) const;
 
 public:
-    IDAStar(undirected_graph & graph, vertex_iterator root,
-            vertex_iterator goal);
+    IDAStar(undirected_graph & graph, vertex_descriptor root,
+            vertex_descriptor goal);
 };
 
 

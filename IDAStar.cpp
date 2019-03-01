@@ -7,19 +7,22 @@ IDAStar::IDAStar(undirected_graph & graph,
                  vertex_iterator root,
                  vertex_iterator goal)
         : graph(graph), root(root), goal(goal) {
-    auto bound(estimateCost(*this->root));
-    std::cout << bound << std::endl;
 
+    auto bound(estimateCost(*this->root));
+    std::vector<vertex_descriptor> path(this->root);
+    while (true) {
+        std::cout << this->search(path, test, test) << std::endl;
+    }
 }
 
 double
-IDAStar::search(std::vector<vertex_iterator> path, const double & currentNodeCost,
-                const double & bound) const {
+IDAStar::search(std::vector<vertex_descriptor> path, double & currentNodeCost,
+                double & bound) const {
 
 }
 
-std::vector<vertex_iterator>
-IDAStar::findSuccessors(vertex_iterator node) const {
+std::vector<vertex_descriptor>
+IDAStar::findSuccessors(vertex_descriptor node) const {
 
 }
 
