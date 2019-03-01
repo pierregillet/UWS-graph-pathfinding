@@ -60,15 +60,15 @@ UndirectedGraphHelper::printPath(undirected_graph graph,
                                  std::vector<vertex_descriptor> path) {
     using namespace boost;
 
-    auto vertexNameMap(get(vertex_name, graph));
-    auto edgeWeightMap(get(edge_weight, graph));
+    auto vertexNameMap {get(vertex_name, graph)};
+    auto edgeWeightMap {get(edge_weight, graph)};
 
     if (path.size() < 2) {
         throw std::runtime_error("Path too short to print");
     }
 
     for (auto it(0); it < path.size() - 1; ++it) {
-        auto currentEdge = edge(path[it], path[it + 1], graph);
+        auto currentEdge {edge(path[it], path[it + 1], graph)};
         if (!currentEdge.second) {
             throw std::runtime_error("Cannot print path : edge not found.");
         }

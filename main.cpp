@@ -13,7 +13,7 @@ std::string getline() {
 template <typename T>
 T getInputFromUser() {
     T input;
-    std::istringstream iss(getline());
+    std::istringstream iss{getline()};
     iss >> input >> std::ws;
     if(iss.fail() || !iss.eof()) {
         throw std::runtime_error("Input error.");
@@ -23,20 +23,20 @@ T getInputFromUser() {
 
 int main(int argc, char * argv[]) {
     using namespace boost;
-    std::string graphFilename("random64_4_1485816605.dot");
-    auto graph(UndirectedGraphHelper::parseGraphFromFile(graphFilename));
+    std::string graphFilename {"random64_4_1485816605.dot"};
+    auto graph {UndirectedGraphHelper::parseGraphFromFile(graphFilename)};
 
 //    UndirectedGraphHelper::printGraph(graph);
 
     std::cout << "Root node number:" << std::endl << "> ";
-    auto rootNodeNumber = getInputFromUser<int>();
+    auto rootNodeNumber{getInputFromUser<int>()};
     std::cout << "Goal node number:" << std::endl << "> ";
-    auto goalNodeNumber = getInputFromUser<int>();
+    auto goalNodeNumber{getInputFromUser<int>()};
 
-    auto root = UndirectedGraphHelper::findNode(graph, rootNodeNumber);
-    auto goal = UndirectedGraphHelper::findNode(graph, goalNodeNumber);
+    auto root {UndirectedGraphHelper::findNode(graph, rootNodeNumber)};
+    auto goal {UndirectedGraphHelper::findNode(graph, goalNodeNumber)};
 
-    auto pathFinder = IDAStar(graph, root, goal);
+    IDAStar pathFinder {graph, root, goal};
 
     UndirectedGraphHelper::printPath(graph, pathFinder.getPath());
 

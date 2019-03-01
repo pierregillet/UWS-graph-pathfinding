@@ -6,12 +6,12 @@
 IDAStar::IDAStar(undirected_graph & graph,
                  vertex_descriptor root,
                  vertex_descriptor goal)
-        : graph(graph), root(root), goal(goal) {
+        : graph{graph}, root{root}, goal{goal} {
 
     this->bound = this->estimateCost(this->root);
     this->path.push_back(this->root);
     while (true) {
-        auto searchResult = this->search(0.0d);
+        auto searchResult {this->search(0.0d)};
         if (searchResult.isFound
             || !searchResult.cost) {
             this->pathIsFound = searchResult.isFound;
@@ -24,7 +24,7 @@ IDAStar::IDAStar(undirected_graph & graph,
 SearchResult
 IDAStar::search(double currentNodeCost) const {
     auto currentNode = path.back();
-    auto estimatedTotalCost = currentNodeCost + estimateCost(currentNode);
+    auto estimatedTotalCost {currentNodeCost + estimateCost(currentNode)};
 
     if (estimatedTotalCost > this->bound) {
         return {false, std::make_shared<double>(estimatedTotalCost)};
@@ -45,17 +45,17 @@ double
 IDAStar::estimateCost(vertex_descriptor node) const {
     using namespace boost;
 
-    auto edgeWeightMap(get(edge_weight, graph));
+    auto edgeWeightMap {get(edge_weight, graph)};
     out_edge_iterator it, end;
     tie(it, end) = out_edges(node, this->graph);
-    double minimumCost = edgeWeightMap[*it];
+    auto minimumCost {edgeWeightMap[*it]};
 
     if (it != end) {
         ++it;
     }
 
     for ( ; it != end; ++it) {
-        double weight = edgeWeightMap[*it];
+        double weight {edgeWeightMap[*it]};
         if (weight < minimumCost) {
             minimumCost = weight;
         }
