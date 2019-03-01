@@ -7,16 +7,27 @@
 #include "UndirectedGraphHelper.h"
 
 
+//namespace CostValue {
+//    constexpr double INFINITY_COST = -1.0d;
+//};
+
+struct SearchResult {
+    bool isFound = false;
+    std::shared_ptr<double> cost = std::make_shared<double>();
+};
+
 class IDAStar {
 private:
     undirected_graph graph;
     vertex_descriptor root;
     vertex_descriptor goal;
-    double currentNodeCost
+    double currentNodeCost;
     std::vector<vertex_descriptor> path;
 
-    double search(std::vector<vertex_descriptor> path, double & currentNodeCost,
-                  double & bound) const;
+    bool pathIsFound;
+    double bound;
+
+    SearchResult search(double currentNodeCost) const;
 
     std::vector<vertex_descriptor> findSuccessors(vertex_descriptor node) const;
 
@@ -27,6 +38,8 @@ private:
 public:
     IDAStar(undirected_graph & graph, vertex_descriptor root,
             vertex_descriptor goal);
+
+    std::vector<vertex_descriptor> getPath() const;
 };
 
 

@@ -23,10 +23,8 @@ public:
 
     static vertex_descriptor findNode(undirected_graph & graph, const int & nodeLabel);
 
-    static property_map<undirected_graph, edge_weight_t>::type
-    getEdgeWeightPropertyMap(undirected_graph & graph);
-
     static void printGraph(undirected_graph & graph);
+    static void printPath(undirected_graph graph, std::vector<vertex_descriptor> path);
 
 private:
     UndirectedGraphHelper() = default;

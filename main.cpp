@@ -38,5 +38,7 @@ int main(int argc, char * argv[]) {
 
     auto pathFinder = IDAStar(graph, root, goal);
 
+    UndirectedGraphHelper::printPath(graph, pathFinder.getPath());
+
     return 0;
 }

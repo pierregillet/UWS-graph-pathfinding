@@ -4,21 +4,36 @@
 
 
 IDAStar::IDAStar(undirected_graph & graph,
-                 vertex_iterator root,
-                 vertex_iterator goal)
+                 vertex_descriptor root,
+                 vertex_descriptor goal)
         : graph(graph), root(root), goal(goal) {
 
-    auto bound(estimateCost(*this->root));
-    std::vector<vertex_descriptor> path(this->root);
+    this->bound = this->estimateCost(this->root);
+    this->path.push_back(this->root);
     while (true) {
-        std::cout << this->search(path, test, test) << std::endl;
+        auto searchResult = this->search(0.0d);
+        if (searchResult.isFound
+            || !searchResult.cost) {
+            this->pathIsFound = searchResult.isFound;
+            break;
+        }
+        bound = *searchResult.cost;
     }
 }
 
-double
-IDAStar::search(std::vector<vertex_descriptor> path, double & currentNodeCost,
-                double & bound) const {
+SearchResult
+IDAStar::search(double currentNodeCost) const {
+    auto currentNode = path.back();
+    auto estimatedTotalCost = currentNodeCost + estimateCost(currentNode);
 
+    if (estimatedTotalCost > this->bound) {
+        return {false, std::make_shared<double>(estimatedTotalCost)};
+    }
+    if (this->isGoal(currentNode)) {
+        return {true};
+    }
+
+//    return SearchResult{true, std::make_shared<double>(12.34d)};
 }
 
 std::vector<vertex_descriptor>
@@ -49,14 +64,12 @@ IDAStar::estimateCost(vertex_descriptor node) const {
     return minimumCost;
 }
 
-//double
-//IDAStar::calculateStepCost(vertex_iterator node, vertex_iterator successor) const {
-//    for (auto it : this->path) {
-//
-//    }
-//}
-
 bool
 IDAStar::isGoal(vertex_descriptor node) const {
-    return node == *this->goal;
+    return node == this->goal;
+}
+
+std::vector<vertex_descriptor>
+IDAStar::getPath() const {
+    return this->path;
 }
