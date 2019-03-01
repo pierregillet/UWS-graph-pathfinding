@@ -36,6 +36,21 @@ UndirectedGraphHelper::findNode(undirected_graph & graph, const int & nodeLabel)
     throw std::runtime_error("Vertex with label " + std::to_string(nodeLabel) + " not found");
 }
 
+double
+UndirectedGraphHelper::getWeightOfEdge(undirected_graph & graph,
+                                       vertex_descriptor sourceNode,
+                                       vertex_descriptor targetNode) {
+    using namespace boost;
+    auto edgeWeightMap {get(edge_weight, graph)};
+
+    auto currentEdge {edge(sourceNode, targetNode, graph)};
+    if (!currentEdge.second) {
+        throw std::runtime_error("Edge not found.");
+    }
+
+    return edgeWeightMap[currentEdge.first];
+}
+
 void UndirectedGraphHelper::printGraph(undirected_graph & graph) {
     using namespace boost;
 

@@ -23,6 +23,9 @@ public:
 
     static vertex_descriptor findNode(undirected_graph & graph, const int & nodeLabel);
 
+    static double getWeightOfEdge(undirected_graph & graph, vertex_descriptor sourceNode,
+                                  vertex_descriptor targetNode);
+
     static void printGraph(undirected_graph & graph);
     static void printPath(undirected_graph graph, std::vector<vertex_descriptor> path);
 

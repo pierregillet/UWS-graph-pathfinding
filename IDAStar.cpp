@@ -10,15 +10,16 @@ IDAStar::IDAStar(undirected_graph & graph,
 
     this->bound = this->estimateCost(this->root);
     this->path.push_back(this->root);
+    SearchResult searchResult;
     while (true) {
-        auto searchResult {this->search(0.0d)};
-        if (searchResult.isFound
-            || !searchResult.cost) {
-            this->pathIsFound = searchResult.isFound;
+        std::cout << "new bound : " << this->bound << std::endl;
+        searchResult = this->search(0.0);
+        if (searchResult.isFound || !searchResult.cost) {
             break;
         }
         bound = *searchResult.cost;
     }
+    this->pathFound = searchResult.isFound;
 }
 
 SearchResult
@@ -35,10 +36,48 @@ IDAStar::search(const double currentNodeCost) {
 
     SearchResult searchResult {};
 
-    for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
-        if (std::find(path.begin(), path.end(), successor) != path.end()) {
-            this->path.push_back(successor);
+//    ////////////////////// DEBUG ///////////////////////////
+//    auto successors {this->findSuccessors(currentNode)};
+//
+//    auto vertexMap {get(vertex_name, graph)};
+//    auto edgeWeightMap {get(edge_weight, graph)};
+//
+//    for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
+//        std::cout << vertexMap[successor]
+////                  << " weight : "
+////                  << edgeWeightMap[*it]
+//                  << std::endl;
+//    }
+//
+//    ////////////////////// END OF DEBUG ///////////////////////////
 
+    for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
+        if (std::find(path.begin(), path.end(), successor) == path.end()) {
+            this->path.push_back(successor);
+            auto weightToSuccessor {UndirectedGraphHelper::getWeightOfEdge(this->graph, currentNode, successor)};
+            auto newSearchResult {this->search(currentNodeCost + weightToSuccessor)};
+            if (newSearchResult.isFound) {
+                return newSearchResult;
+            }
+
+//            ////////////////////// DEBUG ///////////////////////////
+//            auto vertexMap {get(vertex_name, graph)};
+//            auto edgeWeightMap {get(edge_weight, graph)};
+//
+//            for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
+//                std::cout << vertexMap[successor]
+//                          //                  << " weight : "
+//                          //                  << edgeWeightMap[*it]
+//                          << std::endl;
+//            }
+//
+//            ////////////////////// END OF DEBUG ///////////////////////////
+
+            if (newSearchResult.cost && (!searchResult.cost
+                                         || newSearchResult.cost < searchResult.cost)) {
+                searchResult.cost = newSearchResult.cost;
+            }
+            this->path.pop_back();
         }
     }
 
@@ -58,13 +97,9 @@ IDAStar::findSuccessors(vertex_descriptor sourceNode) {
         orderedNodes.push_back(*it);
     }
     std::sort(orderedNodes.begin(), orderedNodes.end(),
-              [sourceNode, edgeWeightMap, this](vertex_descriptor i, vertex_descriptor j) {
-                  auto iEdge {edge(sourceNode, i, this->graph)};
-                  auto jEdge {edge(sourceNode, j, this->graph)};
-                  if (!iEdge.second || !jEdge.second) {
-                          throw std::runtime_error("Edge not found.");
-                  }
-                  return edgeWeightMap[iEdge.first] < edgeWeightMap[jEdge.first];
+              [sourceNode, this](vertex_descriptor i, vertex_descriptor j) {
+                  return UndirectedGraphHelper::getWeightOfEdge(this->graph, sourceNode, i)
+                         < UndirectedGraphHelper::getWeightOfEdge(this->graph, sourceNode, j);
               }
     );
 

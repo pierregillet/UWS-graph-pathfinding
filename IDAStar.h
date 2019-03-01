@@ -23,7 +23,7 @@ private:
     vertex_descriptor goal;
     std::vector<vertex_descriptor> path;
 
-    bool pathIsFound;
+    bool pathFound;
     double bound;
 
     SearchResult search(const double currentNodeCost);
