@@ -34,18 +34,11 @@ int main(int argc, char * argv[]) {
     std::cout << "Goal node number:" << std::endl << "> ";
     auto goalNodeNumber {getInputFromUser<int>()};
     auto goal {UndirectedGraphHelper::findNode(graph, goalNodeNumber)};
-//    auto root {UndirectedGraphHelper::findNode(graph, 8)};
-//    auto goal {UndirectedGraphHelper::findNode(graph, 7)};
 
     IDAStar pathFinder {graph, root, goal};
     auto completePath {pathFinder.getPath()};
 
     std::cout << "Cost of the shortest path: " << completePath.second << std::endl;
-    std::cout << "Path (raw id): " << std::endl;
-    auto vertexNameMap {get(vertex_name, graph)};
-    for (auto node : completePath.first) {
-        std::cout << "node: " << vertexNameMap[node] << std::endl;
-    }
 
     UndirectedGraphHelper::printPath(graph, completePath.first);
 

@@ -24,7 +24,7 @@ private:
 
     SearchResult search(const double currentNodeCost);
     std::vector<vertex_descriptor> findSuccessors(vertex_descriptor sourceNode);
-    double estimateCost(vertex_descriptor node) const;
+    double estimateCost(vertex_descriptor node, vertex_descriptor parentNode) const;
     bool isGoal(vertex_descriptor vertexRoot) const;
 
 public:
