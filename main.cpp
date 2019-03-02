@@ -28,17 +28,26 @@ int main(int argc, char * argv[]) {
 
 //    UndirectedGraphHelper::printGraph(graph);
 
-//    std::cout << "Root node number:" << std::endl << "> ";
-//    auto rootNodeNumber {getInputFromUser<int>()};
-//    auto root {UndirectedGraphHelper::findNode(graph, rootNodeNumber)};
-//    std::cout << "Goal node number:" << std::endl << "> ";
-//    auto goalNodeNumber {getInputFromUser<int>()};
-//    auto goal {UndirectedGraphHelper::findNode(graph, goalNodeNumber)};
-    auto root {UndirectedGraphHelper::findNode(graph, 16)};
-    auto goal {UndirectedGraphHelper::findNode(graph, 19)};
+    std::cout << "Root node number:" << std::endl << "> ";
+    auto rootNodeNumber {getInputFromUser<int>()};
+    auto root {UndirectedGraphHelper::findNode(graph, rootNodeNumber)};
+    std::cout << "Goal node number:" << std::endl << "> ";
+    auto goalNodeNumber {getInputFromUser<int>()};
+    auto goal {UndirectedGraphHelper::findNode(graph, goalNodeNumber)};
+//    auto root {UndirectedGraphHelper::findNode(graph, 8)};
+//    auto goal {UndirectedGraphHelper::findNode(graph, 7)};
 
     IDAStar pathFinder {graph, root, goal};
-    UndirectedGraphHelper::printPath(graph, pathFinder.getPath());
+    auto completePath {pathFinder.getPath()};
+
+    std::cout << "Cost of the shortest path: " << completePath.second << std::endl;
+    std::cout << "Path (raw id): " << std::endl;
+    auto vertexNameMap {get(vertex_name, graph)};
+    for (auto node : completePath.first) {
+        std::cout << "node: " << vertexNameMap[node] << std::endl;
+    }
+
+    UndirectedGraphHelper::printPath(graph, completePath.first);
 
     return 0;
 }

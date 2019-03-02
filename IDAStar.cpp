@@ -10,14 +10,20 @@ IDAStar::IDAStar(undirected_graph & graph,
 
     this->bound = this->estimateCost(this->root);
     this->path.push_back(this->root);
+    this->vertexNameMap = boost::get(boost::vertex_name, graph);
     SearchResult searchResult;
     while (true) {
-        std::cout << "new bound : " << this->bound << std::endl;
         searchResult = this->search(0.0);
-        if (searchResult.isFound || !searchResult.cost) {
+        if (searchResult.isFound) {
             break;
         }
-        bound = *searchResult.cost;
+        if(!searchResult.cost) {
+            break;
+        }
+        if (this->bound > *searchResult.cost) {
+            throw std::runtime_error("Trying to assign lower bound value.");
+        }
+        this->bound = *searchResult.cost;
     }
     this->pathFound = searchResult.isFound;
 }
@@ -26,30 +32,17 @@ SearchResult
 IDAStar::search(const double currentNodeCost) {
     auto currentNode = this->path.back();
     auto estimatedTotalCost {currentNodeCost + this->estimateCost(currentNode)};
+    this->vertexNameMap = boost::get(boost::vertex_name, graph);
 
     if (estimatedTotalCost > this->bound) {
+        // All further nodes are out of bounds.
+        // Return the bound needed to explore the closest one.
         return {false, std::make_shared<double>(estimatedTotalCost)};
     }
     if (this->isGoal(currentNode)) {
         return {true};
     }
-
-    SearchResult searchResult {};
-
-//    ////////////////////// DEBUG ///////////////////////////
-//    auto successors {this->findSuccessors(currentNode)};
-//
-//    auto vertexMap {get(vertex_name, graph)};
-//    auto edgeWeightMap {get(edge_weight, graph)};
-//
-//    for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
-//        std::cout << vertexMap[successor]
-////                  << " weight : "
-////                  << edgeWeightMap[*it]
-//                  << std::endl;
-//    }
-//
-//    ////////////////////// END OF DEBUG ///////////////////////////
+    SearchResult searchResult;
 
     for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
         if (std::find(path.begin(), path.end(), successor) == path.end()) {
@@ -60,19 +53,6 @@ IDAStar::search(const double currentNodeCost) {
                 return newSearchResult;
             }
 
-//            ////////////////////// DEBUG ///////////////////////////
-//            auto vertexMap {get(vertex_name, graph)};
-//            auto edgeWeightMap {get(edge_weight, graph)};
-//
-//            for (vertex_descriptor successor : this->findSuccessors(currentNode)) {
-//                std::cout << vertexMap[successor]
-//                          //                  << " weight : "
-//                          //                  << edgeWeightMap[*it]
-//                          << std::endl;
-//            }
-//
-//            ////////////////////// END OF DEBUG ///////////////////////////
-
             if (newSearchResult.cost && (!searchResult.cost
                                          || newSearchResult.cost < searchResult.cost)) {
                 searchResult.cost = newSearchResult.cost;
@@ -80,7 +60,6 @@ IDAStar::search(const double currentNodeCost) {
             this->path.pop_back();
         }
     }
-
     return searchResult;
 }
 
@@ -88,9 +67,7 @@ std::vector<vertex_descriptor>
 IDAStar::findSuccessors(vertex_descriptor sourceNode) {
     using namespace boost;
     auto edgeWeightMap {get(edge_weight, this->graph)};
-
     std::vector<vertex_descriptor> orderedNodes;
-
     graph_traits<undirected_graph>::adjacency_iterator it, end;
 
     for(tie(it, end) = adjacent_vertices(sourceNode, this->graph); it != end; ++it) {
@@ -134,7 +111,7 @@ IDAStar::isGoal(vertex_descriptor node) const {
     return node == this->goal;
 }
 
-std::vector<vertex_descriptor>
+std::pair<std::vector<vertex_descriptor>, double>
 IDAStar::getPath() const {
-    return this->path;
+    return {this->path, this->bound};
 }

@@ -81,8 +81,8 @@ UndirectedGraphHelper::printPath(undirected_graph graph,
         throw std::runtime_error("Path too short to print");
     }
 
-    for (auto it(0); it < path.size() - 1; ++it) {
-        auto currentEdge {edge(path[it], path[it + 1], graph)};
+    for (auto i {0}; i < path.size() - 1; ++i) {
+        auto currentEdge {edge(path[i], path[i + 1], graph)};
         if (!currentEdge.second) {
             throw std::runtime_error("Cannot print path : edge not found.");
         }
